@@ -11,10 +11,16 @@ cmap = plt.cm.jet  # winter
 base_input, base_output = '../data/input/', 'C:/Users/jhh/Desktop/History_data/explore/'
 
 linewidth, fontsize, fig_size, use_axis_or_not, all_axis, M = 1, 25, (11, 8), True, 'on', 4  # M定义绘制子图格个数
-use_package = 'lanqing0926'
+use_package = '6'  # 'lanqing0926'
 use_gauss = True
 plot_sample_rate = 100  # 绘图采样频率
 NN = 1000 / (sensor_sample_rate_now / plot_sample_rate)  # 计算相邻点的时间间隔， 很重要的处理和标定逻辑
+
+def frequency_plot():
+    '''
+        For observing frequency performance of the raw data
+    '''
+    return
 
 def interact_With_User():  ######  接收用户参数，决定文件夹等
     import os
@@ -52,16 +58,25 @@ def rewrite_data_prepare_for_plot():
     file_array_all = []
     for category in files_train:
         files_list = []
-        for one_category_single_file in file_dict[category]:  # No worry "Ordered",for it is list
-            file_array = read_a_file(one_category_single_file)
-            files_list.append(file_array)
-        file_array_one_category = vstack_list(files_list)
-        file_array_all.append(file_array_one_category.T)
+        if len(file_dict[category]) == 1:
+            file_array = read_a_file(file_dict[category][0])
+            file_array_all.append(file_array.T)
+        else:
+            for one_category_single_file in file_dict[category]:  # No worry "Ordered",for it is list
+                file_array = read_a_file(one_category_single_file)
+                files_list.append(file_array)
+            file_array_one_category = vstack_list(files_list)
+            file_array_all.append(file_array_one_category.T)
+    #### 解决 imbalanced 问题
+    print(file_array_all[0].shape)
     file_array_all = hstack_list(file_array_all)
-    if len(file_array_all.shape) > 2:
+    print('Shape of hstack', file_array_all.shape)
+
+    if len(file_array_all[0].shape) > 2:
         file_array_all = file_array_all.reshape([file_array_all.shape[0], file_array_all.shape[1]])
-    print('Shape of data', file_array_one_category.shape)
+    print('Shape of data', file_array_all.shape)
     file_array_all = pd.DataFrame(file_array_all)
+    # print(file_array_all)
     file_array_all.columns = files_train
     return file_array_all
 

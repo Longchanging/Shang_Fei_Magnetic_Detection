@@ -97,10 +97,11 @@ def data_prepare(input_folder, different_category, percent2read_afterPCA_data, a
     fft_data = vstack_list(fft_list)
     num_feature = vstack_list(num_list)
     data = feature_logic(fft_data, num_feature, 'train')
-    label, _ = one_hot_coding(label, 'train')  # not really 'one-hot',haha
+    label_OneHot, _ = one_hot_coding(label, 'train')  # not really 'one-hot',haha
     data = min_max_scaler(data) 
-    print('Shape of data,shape of label:', data.shape, label.shape)
-    return data, label
+    print('Shape of data,shape of label:', data.shape, label_OneHot.shape)
+    plot_classification(data, different_category, label_OneHot)
+    return data, label_OneHot
 
 def baseline_trainTest(data, label):  
     """   
@@ -168,6 +169,35 @@ def baseline_trainTest(data, label):
     print('Matrix:\n', f2.astype(int))
     return  accuracy_all_list, max_score
 
+def plot_classification(data, different_category, label_OneHot):
+    '''
+        Plot Raw Data For Helping Decision
+    '''
+    import matplotlib.pyplot as plt
+    label_categories = np.max(label_OneHot) + 1  # 0 to max,e.g.[0,1,2,3]
+    fig = plt.figure()
+    labels = sorted(different_category)
+    print(labels)
+    axiss = []
+    for i in range(label_categories):
+        if label_categories % 3 == 0:
+            size = [3, label_categories / 3] 
+        elif label_categories % 2 == 0:
+            size = [2, label_categories / 2] 
+        loc = size[0] * 100 + size[1] * 10 + i + 1 
+        print(loc)
+        axes = fig.add_subplot(loc)  # define figures
+        axiss.append(axes)
+    color_all = ['r', 'b', 'y', 'g', 'o', 'r', 'b', 'y', 'g', 'o']
+    print(different_category, '\n', label_OneHot)
+    for i in range(label_categories):
+        data_category_i = data[label_OneHot == i]
+        axiss[i].plot(range(len(data_category_i)), data_category_i[:, 0], color_all[i])
+        print(labels[i])
+        axiss[i].legend((labels[i],))  ###### Feature of Python MAtplotlib
+    plt.show()
+    return
+
 def train(train_folder_defineByUser):
     '''
         Complete code for processing one folder
@@ -175,6 +205,7 @@ def train(train_folder_defineByUser):
     train_keyword, train_folder, _, _, train_tmp, _, _, \
     _, model_folder, _ = generate_configs(train_folders, train_folder_defineByUser)
     # 第二段程序 需要读用户传的命令是什么（训练、测试、预测、基线、模型）
+    print(train_keyword)
     data, label = data_prepare(train_folder, train_keyword, train_data_rate, train_tmp)  #### 读数据
     baseline_trainTest(data, label)  #### 训练KNN、RF等传统模型
     check_model()  #### 输出 dict对应的标签
@@ -201,4 +232,4 @@ def online_predict(one_timeWindow_data):
     return predict_values, class_list[int(predict_values[0])]
 
 if __name__ == '__main__':
-    train('3')
+    train('lanqing0926')

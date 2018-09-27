@@ -46,13 +46,13 @@ train_folders = {
 
 ### 此处添加文件相关信息 ###
 train_info_file = 'train_info_all.txt'
-train_keyword = ['Arm_103X_20_-', 'Arm_103X_20_+', 'Arm_103Y_20_-', 'Arm_103Y_20_+', 'Arm_103Z_20_-', 'Arm_103Z_20_+']
-train_folder = '../data//input//3/'
-test_folder = '../data//input//3/'
-predict_folder = '../data//input//3/'
-train_tmp = '../data//tmp/3//tmp/train/'
-test_tmp = '../data//tmp/3//tmp/test/'
-predict_tmp = '../data//tmp/3//tmp/predict/'
-train_tmp_test = '../data//tmp/3//tmp/train/test/'
-model_folder = '../data//tmp/3//model/'
-NB_CLASS = 6
+train_keyword = ['down', 'left', 'right', 'up']
+train_folder = '../data//input//lanqing0926/'
+test_folder = '../data//input//lanqing0926/'
+predict_folder = '../data//input//lanqing0926/'
+train_tmp = '../data//tmp/lanqing0926//tmp/train/'
+test_tmp = '../data//tmp/lanqing0926//tmp/test/'
+predict_tmp = '../data//tmp/lanqing0926//tmp/predict/'
+train_tmp_test = '../data//tmp/lanqing0926//tmp/train/test/'
+model_folder = '../data//tmp/lanqing0926//model/'
+NB_CLASS = 4
