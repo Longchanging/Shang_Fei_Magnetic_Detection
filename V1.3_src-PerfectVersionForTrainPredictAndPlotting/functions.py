@@ -140,7 +140,16 @@ def vstack_list(tmp):
 def hstack_list(tmp):
     '''
         Concentrate a list of array with same number of columns to new array
+        @overwrite Deal with Unbalanced problem
     '''
+    length_list, re_sized_array = [], []
+    for item in tmp:
+        length_list.append(len(item))  # calcu all item length
+    if len(tmp[0]) * len(tmp) != np.sum(length_list):
+        min_length = np.min(length_list)
+        for tt in tmp:
+            re_sized_array.append(tt[-min_length:]) 
+        tmp = np.array(re_sized_array)
     if len(tmp) > 1:
         data = np.hstack((tmp[0], tmp[1]))
         for i in range(2, len(tmp)):
